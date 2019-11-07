@@ -18,7 +18,6 @@ function lookTree(current,letter){
         }
         
         if(current.right&&current.right.tag.indexOf(letter)!==-1){
-            console.log(current.right.tag.indexOf(letter))
             output=output+'1'
             current=current.right
         }else if(current.left&&current.left.tag.indexOf(letter)!==-1){
@@ -68,8 +67,7 @@ function calls(initString){
                     //console.log(encondingHuffman + ' encondingHuffman')
                     isNew = true
                     // adding asci value to output as it is a new value with dugger
-                    output = output + encondingHuffman + letter.charCodeAt(0).toString(2) 
-                    console.log(output + ' OUTPUT')
+                    output = output+' ' + encondingHuffman +' '+ letter.charCodeAt(0).toString(2) 
                     // console.log(huffmanTree)
                     console.log(
                         treeify.asTree(huffmanTree
@@ -86,9 +84,16 @@ function calls(initString){
             sortable.push(hashTableNodes[symbol])
         }
 
-
+        console.log('FIRST')
         while(sortable.length>1){
-            sortable.sort((a, b)=>a.value > b.value && a.tag.length < b.tag.length)
+            sortable.sort((a, b)=>{
+                if(a.value===b.value){
+                    return a.tag.length > b.tag.length
+                }
+                return a.value > b.value 
+            })
+            console.log('sortable--------------')
+            console.log(sortable)
             const firstTwo = sortable.splice(0,2)
 
             let temp = new HuffmanNode(firstTwo[0].tag+firstTwo[1].tag,firstTwo[0].value+firstTwo[1].value)
@@ -98,6 +103,12 @@ function calls(initString){
 
             
             sortable.push(temp)
+            console.log('WHILE')
+            console.log(sortable)
+            console.log(
+               treeify.asTree(sortable
+           , true)
+            )
 
         }
         
@@ -106,8 +117,10 @@ function calls(initString){
 
             if(!isNew){
 
-            output = output+lookTree(huffmanTree,letter)
-            //console.log(lookTree(huffmanTree,letter))
+            output = output+' '+lookTree(huffmanTree,letter)
+            // console.log('LOOOKTREE'+letter)
+
+
             }
             ///HUFMAN TREEE
             //console.log('HUFMAN TREEE')
