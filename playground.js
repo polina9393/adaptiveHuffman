@@ -35,32 +35,39 @@ function lookTree(current,letter){
 function calls(initString){
     const hashTableNodes = [new HuffmanNode('x',0)]
     const enconding = []
+    // first letter will be always in asci
     let output = initString[0].charCodeAt(0).toString(2) 
     
+    // constructed initial tree with letter and dugger ax
     hashTableNodes.push(new HuffmanNode(initString[0],1))
     let huffmanTree = new HuffmanNode('x'+ initString[0],1)
     huffmanTree.left = hashTableNodes[1]
-    huffmanTree.right = hashTableNodes[0]
+    huffmanTree.right = hashTableNodes[0] // dugger
+
+
     for(let i = 1;i<initString.length;i++){
         let isNew = false 
         const letter = initString[i]
 
+        // check in hash table if it exists or not
         for(let i =0;i<hashTableNodes.length;i++){
+            // if same letter has already been it increments value 
            if(hashTableNodes[i].tag === letter){
                hashTableNodes[i].value=hashTableNodes[i].value+1
                break
             }
-
+            // if it went throught all hash table tags and has't found the same letter
             if(i === hashTableNodes.length-1){ 
 
                 hashTableNodes.push(new HuffmanNode(letter,1))
                 //console.log(huffmanTree)
-                if(huffmanTree){
 
-                    
+                if(huffmanTree){
+                    // calculating dugger 
                     let encondingHuffman = lookTree(huffmanTree,'x')
                     //console.log(encondingHuffman + ' encondingHuffman')
                     isNew = true
+                    // adding asci value to output as it is a new value with dugger
                     output = output + encondingHuffman + letter.charCodeAt(0).toString(2) 
                     console.log(output + ' OUTPUT')
                     // console.log(huffmanTree)
