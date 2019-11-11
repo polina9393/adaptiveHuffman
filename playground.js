@@ -151,18 +151,15 @@ function decode(encodedString){
     let current = huffmanTree
    //  console.log(encodedString + 'encodedString') 
     for(let i =0;i<encodedString.length;i++){
-        const decodedNumber = parseInt(encodedString[0]) // 1
+        const decodedNumber = parseInt(encodedString[i]) // 1
 
         let findLetter = ''
         // check in tree
-
             if(decodedNumber === 0){
                 // left
 
                 if(!current.left){
                     findLetter = String.fromCharCode(parseInt(decodedNumber, 2))
-                    console.log(findLetter+'findLetter')
-                    console.log()
                 } else{
                     current = current.left
                 }
@@ -170,7 +167,6 @@ function decode(encodedString){
             }else if(decodedNumber === 1){
                 if(!current.right){
                     findLetter = String.fromCharCode(parseInt('1', 2))
-                    console.log(findLetter+'findLetter')
                 } else{
                     current = current.right
                 }
@@ -179,22 +175,24 @@ function decode(encodedString){
                 console.log(current.tag)
                 // if it is dugger read again 8 charecters 
                 if(current.tag === 'x'){
-                        // first letter will be always in asci
                         let nextEight = encodedString.substring(i+1,8)
                         encodedString = encodedString.substring(i+8)
-                        console.log(encodedString+ ' ENCODESTRING')
+                        console.log(nextEight+'NEXTEIGHT')
+                        console.log(encodedString+ "ENC")
                         output = output+String.fromCharCode(parseInt(nextEight, 2))
+                        
+
+                }else{
 
                 }
+                // update huffman tree
+                
                 // else get tag -> 
                 
-                // reset the 
+                // reset the node
                 current = huffmanTree
             }
-
         }
-        // if it was not a current 
-        // change current to the top
 
 
     return output
