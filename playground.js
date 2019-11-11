@@ -66,7 +66,7 @@ function encode(initString){
                     //console.log(encondingHuffman + ' encondingHuffman')
                     isNew = true
                     // adding asci value to output as it is a new value with dugger
-                    output = output+' ' + encondingHuffman +' '+ letter.charCodeAt(0).toString(2) 
+                    output = output+ encondingHuffman+ letter.charCodeAt(0).toString(2) 
                     // console.log(huffmanTree)
                     console.log(
                         treeify.asTree(huffmanTree
@@ -114,7 +114,7 @@ function encode(initString){
 
             if(!isNew){
 
-            output = output+' '+lookTree(huffmanTree,letter)
+            output = output+lookTree(huffmanTree,letter)
             // console.log('LOOOKTREE'+letter)
 
 
@@ -134,38 +134,71 @@ function encode(initString){
 const encodedString = encode('abcbb')
 
 function decode(encodedString){
-
+    // 1100001 1 1100010 01 1100011 1 0
     const hashTableNodes = [new HuffmanNode('x',0)]
     const decoded = []
     // first letter will be always in asci
-    let firstEight = encodedString.substring(0,9)
-    encodedString = encodedString.substring(8)
+    let firstEight = encodedString.substring(0,7)
+    encodedString = encodedString.substring(7)
     let output = String.fromCharCode(parseInt(firstEight, 2))
-
+    console.log(firstEight+'OUTPUT')
     // constructed initial tree with letter and dugger ax
     hashTableNodes.push(new HuffmanNode(output,1))
     let huffmanTree = new HuffmanNode('x'+ output,1)
     huffmanTree.left = hashTableNodes[1]
     huffmanTree.right = hashTableNodes[0] // dugger
     
-    // let current = 
+    let current = huffmanTree
+   //  console.log(encodedString + 'encodedString') 
     for(let i =0;i<encodedString.length;i++){
-        const deco = parseInt(encodedString[i])
+        const decodedNumber = parseInt(encodedString[0]) // 1
+
+        let findLetter = ''
         // check in tree
-        if(0){
-            // left
-        }
-        if(1){
+
+            if(decodedNumber === 0){
+                // left
+
+                if(!current.left){
+                    findLetter = String.fromCharCode(parseInt(decodedNumber, 2))
+                    console.log(findLetter+'findLetter')
+                    console.log()
+                } else{
+                    current = current.left
+                }
+                
+            }else if(decodedNumber === 1){
+                if(!current.right){
+                    findLetter = String.fromCharCode(parseInt('1', 2))
+                    console.log(findLetter+'findLetter')
+                } else{
+                    current = current.right
+                }
+            }
+            if(!current.left || !current.right){
+                console.log(current.tag)
+                // if it is dugger read again 8 charecters 
+                if(current.tag === 'x'){
+                        // first letter will be always in asci
+                        let nextEight = encodedString.substring(i+1,8)
+                        encodedString = encodedString.substring(i+8)
+                        console.log(encodedString+ ' ENCODESTRING')
+                        output = output+String.fromCharCode(parseInt(nextEight, 2))
+
+                }
+                // else get tag -> 
+                
+                // reset the 
+                current = huffmanTree
+            }
 
         }
         // if it was not a current 
         // change current to the top
-    }
 
 
-    return encodedString
+    return output
 
 }
 const decodedString = decode(encodedString)
 console.log(encodedString+' '+'decodedString: ' + decodedString)
-
