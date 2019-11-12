@@ -172,7 +172,7 @@ function decode(encodedString){
                         output = output+String.fromCharCode(parseInt(nextEight, 2))
                         
 
-                }else{// else get tag ->
+                }else{/////else get tag ->
 
                 }
                 // update huffman tree
