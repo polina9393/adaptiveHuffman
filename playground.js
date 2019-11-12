@@ -31,6 +31,34 @@ function lookTree(current,letter){
     return output
 }
 
+function updateTree(hashTableNodes){
+    const sortable = []
+    for (let symbol in hashTableNodes) {
+        sortable.push(hashTableNodes[symbol])
+    }
+
+    while(sortable.length>1){
+        sortable.sort((a, b)=>{
+            if(a.value===b.value){
+                return a.tag.length > b.tag.length
+            }
+            return a.value > b.value 
+        })
+
+        const firstTwo = sortable.splice(0,2)
+
+        let temp = new HuffmanNode(firstTwo[0].tag+firstTwo[1].tag,firstTwo[0].value+firstTwo[1].value)
+
+        temp.left = firstTwo[1]
+        temp.right = firstTwo[0]
+
+        
+        sortable.push(temp)
+
+    }
+    return sortable[0]
+}
+
 function encode(initString){
     const hashTableNodes = [new HuffmanNode('x',0)]
     const enconding = []
@@ -77,55 +105,17 @@ function encode(initString){
                 break
             }
         }
-
-        const sortable = []
-        for (let symbol in hashTableNodes) {
-            sortable.push(hashTableNodes[symbol])
-        }
-
-        while(sortable.length>1){
-            sortable.sort((a, b)=>{
-                if(a.value===b.value){
-                    return a.tag.length > b.tag.length
-                }
-                return a.value > b.value 
-            })
-
-            const firstTwo = sortable.splice(0,2)
-
-            let temp = new HuffmanNode(firstTwo[0].tag+firstTwo[1].tag,firstTwo[0].value+firstTwo[1].value)
-
-            temp.left = firstTwo[1]
-            temp.right = firstTwo[0]
-
-            
-            sortable.push(temp)
-        //     console.log('WHILE')
-        //     console.log(sortable)
-        //     console.log(
-        //        treeify.asTree(sortable
-        //    , true)
-        //     )
-
-        }
         
-
-            huffmanTree = sortable[0]
+ 
+            const updatedTree = updateTree(hashTableNodes)
+            huffmanTree = updatedTree
 
             if(!isNew){
 
             output = output+lookTree(huffmanTree,letter)
-            // console.log('LOOOKTREE'+letter)
 
 
             }
-            ///HUFMAN TREEE
-            //console.log('HUFMAN TREEE')
-            //  console.log(huffmanTree)
-            //  console.log(
-            //     treeify.asTree(huffmanTree
-            // , true)
-            //  )
        
     }
     return output
@@ -182,13 +172,13 @@ function decode(encodedString){
                         output = output+String.fromCharCode(parseInt(nextEight, 2))
                         
 
-                }else{
+                }else{// else get tag ->
 
                 }
                 // update huffman tree
-                
-                // else get tag -> 
-                
+                const updatedTree = updateTree(hashTableNodes)
+                huffmanTree = updatedTree
+                 
                 // reset the node
                 current = huffmanTree
             }
