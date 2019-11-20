@@ -96,32 +96,32 @@ function encode(initString){
                     // adding asci value to output as it is a new value with dugger
                     output = output+ encondingHuffman+ letter.charCodeAt(0).toString(2) 
                     // console.log(huffmanTree)
-                    console.log(
-                        treeify.asTree(huffmanTree
-                    , true)
-                     )
+                    // console.log(
+                    //     treeify.asTree(huffmanTree
+                    // , true)
+                    //  )
                     
                 }
                 break
             }
         }
-        
- 
-            const updatedTree = updateTree(hashTableNodes)
-            huffmanTree = updatedTree
-
-            if(!isNew){
+        if(!isNew){
 
             output = output+lookTree(huffmanTree,letter)
 
 
             }
+ 
+            const updatedTree = updateTree(hashTableNodes)
+            huffmanTree = updatedTree
+
+
        
     }
     return output
     //return hashTable
 }
-const encodedString = encode('abcbb')
+const encodedString = encode('abcbbdaaddd')
 
 function decode(encodedString){
     // 1100001 1 1100010 01 1100011 1 0
@@ -147,41 +147,51 @@ function decode(encodedString){
         // check in tree
             if(decodedNumber === 0){
                 // left
-
-                if(!current.left){
-                    findLetter = String.fromCharCode(parseInt(decodedNumber, 2))
-                } else{
                     current = current.left
-                }
                 
             }else if(decodedNumber === 1){
-                if(!current.right){
-                    findLetter = String.fromCharCode(parseInt('1', 2))
-                } else{
                     current = current.right
-                }
             }
+
             if(!current.left || !current.right){
                 console.log(current.tag)
                 // if it is dugger read again 8 charecters 
                 if(current.tag === 'x'){
-                        let nextEight = encodedString.substring(i+1,8)
+                    console.log(encodedString + ' encoded string')
+                        let nextEight = encodedString.substring(i+1,i + 8)
                         encodedString = encodedString.substring(i+8)
+                        i = 0
+                        console.log(i+' i')
                         console.log(nextEight+'NEXTEIGHT')
                         console.log(encodedString+ "ENC")
-                        output = output+String.fromCharCode(parseInt(nextEight, 2))
+                        const character = String.fromCharCode(parseInt(nextEight, 2))
+                        output = output+character
+                        hashTableNodes.push(new HuffmanNode(character,1))
+                        console.log(output + ' output')
                         
-
-                }else{// else get tag ->
+                }else{
+                    // get the tag. print the tag
+                    output= output+current.tag
+                    console.log(output + ' output')
+                    console.log(current.tag + ' current tag')
+                    hashTableNodes[current.tag]++
 
                 }
-                // update huffman tree
-                const updatedTree = updateTree(hashTableNodes)
-                huffmanTree = updatedTree
-                 
+
                 // reset the node
                 current = huffmanTree
+
             }
+            
+            const updatedTree = updateTree(hashTableNodes)
+            // update huffman tree
+            huffmanTree = updatedTree
+                                console.log(
+                        treeify.asTree(huffmanTree
+                    , true)
+                     )
+            console.log(huffmanTree)
+            
         }
 
 
@@ -189,4 +199,4 @@ function decode(encodedString){
 
 }
 const decodedString = decode(encodedString)
-console.log(encodedString+' '+'decodedString: ' + decodedString)
+console.log(encodedString+' '+'dejhjhcodedString: ' + decodedString)
