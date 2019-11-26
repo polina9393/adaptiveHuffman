@@ -3,38 +3,38 @@ const readline = require('readline');
 const dugger = String.fromCharCode(-1)
 
 
-const rl = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout
-});
+// const rl = readline.createInterface({
+//     input: process.stdin,
+//     output: process.stdout
+// });
 
-rl.question('Please write 1 for encode or 2 for decode:', (answer1) => {
-    rl.question('Please write input value:', (answer2) => {
-        if(answer1==='1'){
-            // abcbbdaaddd
-            const encodedString = encode(answer2)
-            const decodedString = decode(encodedString)
-            console.log(`The encode for sequence ${answer2} is ${encodedString}`)
-            console.log(`The decode for sequence ${encodedString} is ${decodedString}`)
-            if(answer2===decodedString){
-                console.log('Test is passed. Decoding and encoding work correctly')
-            }
+// rl.question('Please write 1 for encode or 2 for decode:', (answer1) => {
+//     rl.question('Please write input value:', (answer2) => {
+//         if(answer1==='1'){
+//             // abcbbdaaddd
+//             const encodedString = encode(answer2)
+//             const decodedString = decode(encodedString)
+//             console.log(`The encode for sequence ${answer2} is ${encodedString}`)
+//             console.log(`The decode for sequence ${encodedString} is ${decodedString}`)
+//             if(answer2===decodedString){
+//                 console.log('Test is passed. Decoding and encoding work correctly')
+//             }
 
-        }else if(answer1==='2'){
-            const decodedString = decode(answer2)
-            const encodedString = encode(decodedString)
-            console.log(`The decode for sequence ${answer2} is ${decodedString}`)
-            console.log(`The encode for sequence ${decodedString} is ${encodedString}`)
-            if(answer2===encodedString){
-                console.log('Test is passed. Decoding and encoding work correctly')
-            }
+//         }else if(answer1==='2'){
+//             const decodedString = decode(answer2)
+//             const encodedString = encode(decodedString)
+//             console.log(`The decode for sequence ${answer2} is ${decodedString}`)
+//             console.log(`The encode for sequence ${decodedString} is ${encodedString}`)
+//             if(answer2===encodedString){
+//                 console.log('Test is passed. Decoding and encoding work correctly')
+//             }
 
-        }else{
-            console.log('Please run program again and provide the right value')
-        }
-        rl.close()
-    });
-});
+//         }else{
+//             console.log('Please run program again and provide the right value')
+//         }
+//         rl.close()
+//     });
+// });
 
 function HuffmanNode(tag,value){
     this.value = value
@@ -92,10 +92,30 @@ function updateTree(hashTableNodes){
     }
     return sortable[0]
 }
+function printSteps(stepNumber,huffmanTree,currentInput,output,hashTableNodes){
+console.log('------------------------------------------------')
+console.log(`Step ${stepNumber}`)
+console.log(`Current read input is ${currentInput}`)
+console.log(`Output is ${output}`)
+console.log('A:')
+console.log(...hashTableNodes)
+console.log('Tree:')
+console.log(' ')
+console.log(treeify.asTree(huffmanTree, true))
+console.log('------------------------------------------------')
+}
 
 function encode(initString){
+    // initialising 
     const hashTableNodes = [new HuffmanNode(dugger,0)]
+    console.log(`Step 0`)
+    console.log(...hashTableNodes)
+    console.log('Tree:')
+    console.log(' ')
+    console.log(treeify.asTree(hashTableNodes, true))
+
     const enconding = []
+
     // first letter will be always in asci
     let output = initString[0].charCodeAt(0).toString(2) 
     
@@ -104,6 +124,9 @@ function encode(initString){
     let huffmanTree = new HuffmanNode(dugger+ initString[0],1)
     huffmanTree.left = hashTableNodes[1]
     huffmanTree.right = hashTableNodes[0] // dugger
+
+    // Step one
+    printSteps(1,huffmanTree,initString[0],output,hashTableNodes)
 
 
     for(let i = 1;i<initString.length;i++){
@@ -148,18 +171,17 @@ function encode(initString){
     }
     return output
 }
-// const encodedString = encode('abcbbdaaddd')
+const encodedString = encode('abcbbdaaddd')
 
 function decode(encodedString){
-    // 1100001 1 1100010 01 1100011 1 0
     const hashTableNodes = [new HuffmanNode(dugger,0)]
     const decoded = []
-    // first letter will be always in asci
+    // first letter will be always in ascii
     let firstEight = encodedString.substring(0,7)
     encodedString = encodedString.substring(7)
     let output = String.fromCharCode(parseInt(firstEight, 2))
 
-    // constructed initial tree with letter and dugger ax
+    // constructed initial tree with letter and dugger a&dugger
     hashTableNodes.push(new HuffmanNode(output,1))
     let huffmanTree = new HuffmanNode(dugger+ output,1)
     huffmanTree.left = hashTableNodes[1]
@@ -216,5 +238,5 @@ function decode(encodedString){
     return output
 
 }
-// const decodedString = decode(encodedString)
-// console.log(encodedString+' '+'decodedString: ' + decodedString)
+const decodedString = decode(encodedString)
+console.log(encodedString+' '+'decodedString: ' + decodedString)
