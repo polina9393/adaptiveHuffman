@@ -92,13 +92,13 @@ function updateTree(hashTableNodes){
     }
     return sortable[0]
 }
-function printSteps(stepNumber,huffmanTree,currentInput,output,hashTableNodes){
-console.log('------------------------------------------------')
+function printSteps(stepNumber,huffmanTree,currentInput,output,hashTableNodes,tempOutput){
 console.log(`Step ${stepNumber}`)
 console.log(`Current read input is ${currentInput}`)
-console.log(`Output is ${output}`)
-console.log('A:')
-console.log(...hashTableNodes)
+console.log(`Overall output: ${output}`)
+console.log(`Current output: ${tempOutput}`)
+console.log('Unsorted array of values:')
+console.log(hashTableNodes)
 console.log('Tree:')
 console.log(' ')
 console.log(treeify.asTree(huffmanTree, true))
@@ -109,12 +109,15 @@ function encode(initString){
     // initialising 
     const hashTableNodes = [new HuffmanNode(dugger,0)]
     console.log(`Step 0`)
+    console.log('Unsorted array of values:')
     console.log(...hashTableNodes)
     console.log('Tree:')
     console.log(' ')
     console.log(treeify.asTree(hashTableNodes, true))
+    console.log('------------------------------------------------')
 
     const enconding = []
+    let tempOutput = ''
 
     // first letter will be always in asci
     let output = initString[0].charCodeAt(0).toString(2) 
@@ -150,24 +153,20 @@ function encode(initString){
                     let encondingHuffman = lookTree(huffmanTree, dugger)
                     isNew = true
                     // adding asci value to output as it is a new value with dugger
-                    output = output+ encondingHuffman+ letter.charCodeAt(0).toString(2) 
-                    // console.log(huffmanTree)
-                    // console.log(
-                    //     treeify.asTree(huffmanTree
-                    // , true)
-                    //  )
-                    
+                    output = output+ encondingHuffman+ letter.charCodeAt(0).toString(2)   
+                    tempOutput =  encondingHuffman + ' ' + letter.charCodeAt(0).toString(2)      
                 }
                 break
             }
         }
         if(!isNew){
             output = output+lookTree(huffmanTree,letter)
+            tempOutput = lookTree(huffmanTree,letter)
             }
  
             const updatedTree = updateTree(hashTableNodes)
             huffmanTree = updatedTree
-       
+            printSteps(i+1,huffmanTree,letter,output,hashTableNodes, tempOutput)  
     }
     return output
 }
