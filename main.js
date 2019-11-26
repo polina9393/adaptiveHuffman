@@ -1,4 +1,40 @@
-let treeify = require('treeify');
+const treeify = require('treeify')
+const readline = require('readline');
+const dugger = String.fromCharCode(-1)
+
+
+const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout
+});
+
+rl.question('Please write 1 for encode or 2 for decode:', (answer1) => {
+    rl.question('Please write input value:', (answer2) => {
+        if(answer1==='1'){
+            // abcbbdaaddd
+            const encodedString = encode(answer2)
+            const decodedString = decode(encodedString)
+            console.log(`The encode for sequence ${answer2} is ${encodedString}`)
+            console.log(`The decode for sequence ${encodedString} is ${decodedString}`)
+            if(answer2===decodedString){
+                console.log('Test is passed. Decoding and encoding work correctly')
+            }
+
+        }else if(answer1==='2'){
+            const decodedString = decode(answer2)
+            const encodedString = encode(decodedString)
+            console.log(`The decode for sequence ${answer2} is ${decodedString}`)
+            console.log(`The encode for sequence ${decodedString} is ${encodedString}`)
+            if(answer2===encodedString){
+                console.log('Test is passed. Decoding and encoding work correctly')
+            }
+
+        }else{
+            console.log('Please run program again and provide the right value')
+        }
+        rl.close()
+    });
+});
 
 function HuffmanNode(tag,value){
     this.value = value
@@ -6,8 +42,6 @@ function HuffmanNode(tag,value){
     this.right = null
     this.left = null
 }
-
-const node = new HuffmanNode(2,'d')
 
 function lookTree(current,letter){
     let output = ''
@@ -60,14 +94,14 @@ function updateTree(hashTableNodes){
 }
 
 function encode(initString){
-    const hashTableNodes = [new HuffmanNode('x',0)]
+    const hashTableNodes = [new HuffmanNode(dugger,0)]
     const enconding = []
     // first letter will be always in asci
     let output = initString[0].charCodeAt(0).toString(2) 
     
     // constructed initial tree with letter and dugger ax
     hashTableNodes.push(new HuffmanNode(initString[0],1))
-    let huffmanTree = new HuffmanNode('x'+ initString[0],1)
+    let huffmanTree = new HuffmanNode(dugger+ initString[0],1)
     huffmanTree.left = hashTableNodes[1]
     huffmanTree.right = hashTableNodes[0] // dugger
 
@@ -90,8 +124,7 @@ function encode(initString){
 
                 if(huffmanTree){
                     // calculating dugger 
-                    let encondingHuffman = lookTree(huffmanTree,'x')
-                    //console.log(encondingHuffman + ' encondingHuffman')
+                    let encondingHuffman = lookTree(huffmanTree, dugger)
                     isNew = true
                     // adding asci value to output as it is a new value with dugger
                     output = output+ encondingHuffman+ letter.charCodeAt(0).toString(2) 
@@ -105,35 +138,21 @@ function encode(initString){
                 break
             }
         }
-        // console.log(huffmanTree)
-        // console.log('HUFFMAN TREE BEFOREEEEEE')
         if(!isNew){
-
             output = output+lookTree(huffmanTree,letter)
-            // console.log(lookTree(huffmanTree,letter))
-            // console.log('loooook')
-            // console.log(letter)
-
             }
  
             const updatedTree = updateTree(hashTableNodes)
             huffmanTree = updatedTree
-            // console.log(huffmanTree)
-            // console.log('HUFFMAN TREE')
-
-
-
        
     }
     return output
-    //return hashTable
 }
-const encodedString = encode('abcbbbcc')
+// const encodedString = encode('abcbbdaaddd')
 
 function decode(encodedString){
-    console.log('DECODE')
     // 1100001 1 1100010 01 1100011 1 0
-    const hashTableNodes = [new HuffmanNode('x',0)]
+    const hashTableNodes = [new HuffmanNode(dugger,0)]
     const decoded = []
     // first letter will be always in asci
     let firstEight = encodedString.substring(0,7)
@@ -142,65 +161,39 @@ function decode(encodedString){
 
     // constructed initial tree with letter and dugger ax
     hashTableNodes.push(new HuffmanNode(output,1))
-    let huffmanTree = new HuffmanNode('x'+ output,1)
+    let huffmanTree = new HuffmanNode(dugger+ output,1)
     huffmanTree.left = hashTableNodes[1]
     huffmanTree.right = hashTableNodes[0] // dugger
     
     let current = huffmanTree
-    let any = ''
-   //  console.log(encodedString + 'encodedString') 
+
     for(let i =0;i<encodedString.length;i++){
-       any +=encodedString[i]
-        
-        console.log(encodedString+' '+i+' '+encodedString[i]+ 'check encoded string')
         const decodedNumber = parseInt(encodedString[i]) // 1
 
         let findLetter = ''
         // check in tree
             if(decodedNumber === 0){
                 // left
-                    
                     current = current.left
-                
-            }else if(decodedNumber === 1){
-                
-                console.log(current.tag)
-                console.log('before current ')
+            }else if(decodedNumber === 1){   
                     current = current.right
-                    console.log(current.tag)
-                    console.log('after current')
             }
-                                            console.log(
-                        treeify.asTree(huffmanTree
-                    , true)
-                     )
-                     console.log('HUFFFFFF')
-            console.log(current.tag + 'current TAG')
+
             if(!current.left || !current.right){
-                console.log(current.tag)
                 // if it is dugger read again 8 charecters 
-                if(current.tag === 'x'){
-                    console.log(encodedString + ' encoded string')
+                if(current.tag === dugger){
                         let nextEight = encodedString.substring(i+1,i + 8)
                         encodedString = encodedString.substring(i+8)
                         i = -1
-                        console.log(i+' i')
-                        console.log(nextEight+'NEXTEIGHT')
-                        console.log(encodedString+ "ENC")
                         const character = String.fromCharCode(parseInt(nextEight, 2))
                         output = output+character
                         hashTableNodes.push(new HuffmanNode(character,1))
-                        console.log(output + ' output!!!!' + any)
-                        any =''
                         
                 }else{
                     // get the tag. print the tag
                     output= output+current.tag
                     encodedString = encodedString.substring(i+1)
                     i=-1
-                    console.log(output + ' output!!!!222' + any)
-                    console.log(current.tag + ' current tag'+any)
-                    any = ''
                     for(let j = 0;j<hashTableNodes.length;j++){
                         if(hashTableNodes[j].tag===current.tag){
                             hashTableNodes[j].value++
@@ -208,9 +201,6 @@ function decode(encodedString){
 
                         }
                     }
-                    console.log(hashTableNodes)
-
-
                 }
                 const updatedTree = updateTree(hashTableNodes)
                 // update huffman tree
@@ -220,21 +210,11 @@ function decode(encodedString){
 
             }
             
-
-           
-
-            //                     console.log(
-            //             treeify.asTree(huffmanTree
-            //         , true)
-            //          )
-            // console.log(huffmanTree)
-            
         }
-        console.log(any+ ' after loop')
 
 
     return output
 
 }
-const decodedString = decode(encodedString)
-console.log(encodedString+' '+'decodedString: ' + decodedString)
+// const decodedString = decode(encodedString)
+// console.log(encodedString+' '+'decodedString: ' + decodedString)
