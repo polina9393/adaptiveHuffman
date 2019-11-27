@@ -25,7 +25,7 @@ function encode(initString){
     huffmanTree.right = hashTableNodes[0] // dugger
 
     // Step one
-    printSteps(1,huffmanTree,initString[0],output,hashTableNodes)
+    printSteps(1,huffmanTree,initString[0],output,hashTableNodes, output)
 
 
     for(let i = 1;i<initString.length;i++){
