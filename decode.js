@@ -8,8 +8,8 @@ const dugger = String.fromCharCode(-1)
 
 function decode(encodedString){
     // initialising
-    const hashTableNodes = [new HuffmanNode(dugger,0)]
-    printInitile(hashTableNodes)
+    const nodes = [new HuffmanNode(dugger,0)]
+    printInitile(nodes)
 
     const decoded = []
     // first letter will be always in ascii
@@ -18,13 +18,13 @@ function decode(encodedString){
     let output = String.fromCharCode(parseInt(firstEight, 2))
 
     // constructed initial tree with letter and dugger
-    hashTableNodes.push(new HuffmanNode(output,1))
+    nodes.push(new HuffmanNode(output,1))
     let huffmanTree = new HuffmanNode(dugger+ output,1)
-    huffmanTree.left = hashTableNodes[1] // letter
-    huffmanTree.right = hashTableNodes[0] // dugger
+    huffmanTree.left = nodes[1] // letter
+    huffmanTree.right = nodes[0] // dugger
 
     // Step one
-    printSteps(1,huffmanTree,firstEight,output,hashTableNodes, output)
+    printSteps(1,huffmanTree,firstEight,output,nodes, output)
     
     let current = huffmanTree
     let step = 1
@@ -50,7 +50,7 @@ function decode(encodedString){
                         i = -1
                         const character = String.fromCharCode(parseInt(nextEight, 2))
                         output = output+character
-                        hashTableNodes.push(new HuffmanNode(character,1))
+                        nodes.push(new HuffmanNode(character,1))
                         tempOutput = `Reached dugger in tree.${nextEight} ASCII is ${character}`
                 }else{
                     // get the tag. print the tag
@@ -58,15 +58,15 @@ function decode(encodedString){
                     encodedString = encodedString.substring(i+1)
                     tempOutput = current.tag
                     i=-1
-                    for(let j = 0;j<hashTableNodes.length;j++){
-                        if(hashTableNodes[j].tag===current.tag){
-                            hashTableNodes[j].value++
+                    for(let j = 0;j<nodes.length;j++){
+                        if(nodes[j].tag===current.tag){
+                            nodes[j].value++
                             break
 
                         }
                     }
                 }
-                const updatedTree = updateTree(hashTableNodes)
+                const updatedTree = updateTree(nodes)
                 // update huffman tree
                 huffmanTree = updatedTree
                 // reset the node
@@ -74,7 +74,7 @@ function decode(encodedString){
             }else{
                 tempOutput = 'not a leaf yet'
             }       
-            printSteps(step,huffmanTree,decodedNumber,output,hashTableNodes,tempOutput)
+            printSteps(step,huffmanTree,decodedNumber,output,nodes,tempOutput)
         }
 
 

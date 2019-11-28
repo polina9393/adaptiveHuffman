@@ -8,41 +8,39 @@ const {printInitile} = require('./printing')
 const dugger = String.fromCharCode(-1)
 
 function encode(initString){
-    // initialising 
-    const hashTableNodes = [new HuffmanNode(dugger,0)]
-    // printInitile(hashTableNodes)
-
-    const enconding = []
+    // INITIALISING ////////////////////////////////////////
+    const nodes = [new HuffmanNode(dugger,0)]
+    printInitile(nodes)
     let tempOutput = ''
 
     // first letter will be always in asci
     let output = initString[0].charCodeAt(0).toString(2) 
     
     // constructed initial tree with letter and dugger ax
-    hashTableNodes.push(new HuffmanNode(initString[0],1))
+    nodes.push(new HuffmanNode(initString[0],1))
     let huffmanTree = new HuffmanNode(dugger+ initString[0],1)
-    huffmanTree.left = hashTableNodes[1]
-    huffmanTree.right = hashTableNodes[0] // dugger
+    huffmanTree.left = nodes[1]
+    huffmanTree.right = nodes[0] // dugger
 
-    // Step one
-    printSteps(1,huffmanTree,initString[0],output,hashTableNodes, output)
+    // STEP ONE///////////////////////////////////////////////
+    printSteps(1,huffmanTree,initString[0],output,nodes, output)
 
-
+    // NEXT STEPS
     for(let i = 1;i<initString.length;i++){
         let isNew = false 
         const letter = initString[i]
 
         // check in hash table if it exists or not
-        for(let i =0;i<hashTableNodes.length;i++){
+        for(let i =0;i<nodes.length;i++){
             // if same letter has already been it increments value 
-           if(hashTableNodes[i].tag === letter){
-               hashTableNodes[i].value=hashTableNodes[i].value+1
+           if(nodes[i].tag === letter){
+               nodes[i].value=nodes[i].value+1
                break
             }
             // if it went throught all hash table tags and has't found the same letter
-            if(i === hashTableNodes.length-1){ 
+            if(i === nodes.length-1){ 
 
-                hashTableNodes.push(new HuffmanNode(letter,1))
+                nodes.push(new HuffmanNode(letter,1))
 
                 if(huffmanTree){
                     // calculating dugger 
@@ -60,9 +58,9 @@ function encode(initString){
             tempOutput = lookTree(huffmanTree,letter)
             }
  
-            const updatedTree = updateTree(hashTableNodes)
+            const updatedTree = updateTree(nodes)
             huffmanTree = updatedTree
-            printSteps(i+1,huffmanTree,letter,output,hashTableNodes, tempOutput)  
+            printSteps(i+1,huffmanTree,letter,output,nodes, tempOutput)  
     }
     return output
 }

@@ -1,10 +1,10 @@
 const {HuffmanNode} = require('./huffman')
 
-function updateTree(hashTableNodes){
+function updateTree(nodes){
     const sortable = []
     // creating array from hashTable to sort it later
-    for (let symbol in hashTableNodes) {
-        sortable.push(hashTableNodes[symbol])
+    for (let symbol in nodes) {
+        sortable.push(nodes[symbol])
     }
 
     while(sortable.length>1){
